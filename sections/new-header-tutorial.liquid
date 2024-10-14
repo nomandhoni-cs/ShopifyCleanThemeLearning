@@ -33,12 +33,12 @@
                             {{ childLink.title }} {{ 'down-icon.svg' | inline_asset_content }}
                           </button>
                           <div
-                            class=""
+                            class="space-y-1"
                             x-show="dropdown_open"
                             @click.away="dropdown_open = false">
                             {% for grandChildLink in childLink.links %}
                               <!-- Grandchild link -->
-                              <a href="{{grandChildLink.url}}" class="p-3 flex items-start rounded-lg hover:bg-gray-100">
+                              <a href="{{grandChildLink.url}}" class="p-3 flex items-start rounded-lg bg-gray-200 hover:bg-gray-300">
                                 <div class="ml-4">
                                   <p class="text-gray-900 text-base font-medium">
                                     {{ grandChildLink.title }}
@@ -48,16 +48,17 @@
                             {% endfor %}
                           </div>
                         </div>
+                      {% else %}
+                        <!-- Child link (no grandchild) -->
+                        <a href="{{childLink.url}}" class="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-100">
+                          <div class="ml-4">
+                            <p class="text-gray-900 text-base font-medium">
+                              {{ childLink.title }}
+                            </p>
+                          </div>
+                        </a>
                       {% endif %}
 
-                      <!-- Child link (no grandchild) -->
-                      <a href="{{childLink.url}}" class="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-100">
-                        <div class="ml-4">
-                          <p class="text-gray-900 text-base font-medium">
-                            {{ childLink.title }}
-                          </p>
-                        </div>
-                      </a>
                     {% endfor %}
                   </div>
                 </div>
