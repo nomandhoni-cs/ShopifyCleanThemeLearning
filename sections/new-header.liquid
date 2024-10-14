@@ -3,24 +3,66 @@
     <div class="flex justify-center items-center py-6 md:justify-start md:space-x-10">
       <!-- STORE NAME / STORE LOGO -->
       <div class="flex justify-start lg:flex-1 truncate">
-        <h1 class="text-xl font-bold truncate">{{ shop.name }}</h1>
+        <h1 class="text-3xl font-bold truncate">{{ shop.name }}</h1>
       </div>
 
       <!-- NAVIGATION MENU -->
-      <nav class="hidden md:flex space-x-10">
+      <div class="hidden md:flex space-x-2">
         {% for link in linklists.main-menu.links %}
-          {% if link.links != blank %}
-            {% for link in link.links %}
-              <div class="relative">
-                <a href="{{link.url}}" class="text-base text-gray-500 hover:text-gray-900">{{ link.title }}</a>
-              </div>
-            {% endfor %}
-          {% endif %}
-          <div class="relative">
-            <a href="{{link.url}}" class="text-base text-gray-500 hover:text-gray-900">{{ link.title }}</a>
+          <div class="group inline-block relative">
+            {% if link.links != blank %}
+              <button class="px-3 py-1 bg-white rounded-sm flex items-center min-w-32">
+                <span class="pr-1 flex-1">{{ link.title }}</span>
+                {% if link.links != blank %}
+                  <span>
+                    <svg
+                      class="fill-current h-4 w-4 transform group-hover:-rotate-180 duration-150 ease-in-out"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20">
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </span>
+                {% endif %}
+              </button>
+              <ul class="bg-white border rounded-sm transform scale-0 group-hover:scale-100 absolute transition duration-150 ease-in-out origin-top min-w-max">
+                {% for sublink in link.links %}
+                  <li class="rounded-sm relative px-3 py-1 hover:bg-gray-100">
+                    {% if sublink.links != blank %}
+                      <!-- Sublink with nested grandchild links -->
+                      <button class="w-full text-left flex items-center outline-none focus:outline-none">
+                        <span class="pr-1 flex-1">{{ sublink.title }}</span>
+                        <span class="mr-auto">
+                          <svg
+                            class="fill-current h-4 w-4 transition duration-150 ease-in-out"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20">
+                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                          </svg>
+                        </span>
+                      </button>
+
+                      <!-- Third-level menu (grandchild links) -->
+                      <ul class="bg-white border rounded-sm absolute top-0 right-0 transition duration-150 ease-in-out origin-top-left min-w-max">
+                        {% for grandChildLink in sublink.links %}
+                          <li class="px-3 py-1 hover:bg-gray-100">
+                            <a href="{{ grandChildLink.url }}">{{ grandChildLink.title }}</a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      <!-- Sublink without grandchild links -->
+                      <a href="{{ sublink.url }}" class="block px-3 py-1 hover:bg-gray-100">{{ sublink.title }}</a>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <a href="{{ link.url }}" class="block px-3 py-1 hover:bg-gray-100">{{ link.title }}</a>
+            {% endif %}
           </div>
         {% endfor %}
-      </nav>
+      </div>
+
 
       <div class="hidden md:flex items-center justify-end md:flex-1 space-x-5">
         <a href="{{routes.cart_url}}" class="whitespace-nowrap text-base text-gray-500 hover:text-gray-900">
@@ -33,3 +75,46 @@
     </div>
   </div>
 </div>
+{% style %}
+
+
+  /*
+
+   since nested groupes are not supported we have to use 
+   regular css for the nested dropdowns 
+*/
+  li > ul {
+    transform: translatex(100%) scale(0)
+  }
+  li:hover > ul {
+    transform: translatex(101%) scale(1)
+  }
+  li > button svg {
+    transform: rotate(-90deg)
+  }
+  li:hover > button svg {
+    transform: rotate(-270deg)
+  }
+
+
+  /*
+
+   Below styles fake what can be achieved with the tailwind config 
+   you need to add the group-hover variant to scale and define your custom 
+   min width style. 
+   See https://codesandbox.io/s/tailwindcss-multilevel-dropdown-y91j7?file=/index.html 
+   for implementation with config file 
+*/
+  .group:hover .group-hover\:scale-100 {
+    transform: scale(1)
+  }
+  .group:hover .group-hover\:-rotate-180 {
+    transform: rotate(180deg)
+  }
+  .scale-0 {
+    transform: scale(0)
+  }
+  .min-w-32 {
+    min-width: 8rem
+  }
+{% endstyle %}
