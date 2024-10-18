@@ -1,0 +1,11 @@
+{
+    "name": "Home Page",
+    "sections": {
+        "product-slider": {
+            "type": "product-slider",
+        }
+    },
+    "order": [
+        "product-slider"
+    ]
+}
