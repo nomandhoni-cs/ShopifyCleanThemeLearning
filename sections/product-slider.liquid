@@ -1,0 +1,113 @@
+<section class="container mx-auto px-4 py-12" id="product-slider">
+  {% for item in section.blocks %}
+    <div class="flex flex-col md:flex-row items-center hidden">
+      <div class="md:w-1/2 mb-8 md:mb-0">
+        <img
+          id="slider-image"
+          src="{{ item.settings.product.images[0] | img_url: 'master' }}"
+          alt="{{ item.settings.product.title }}"
+          class="w-full h-1/2 object-cover rounded-lg shadow-lg transition-transform duration-500 hover:scale-105">
+      </div>
+      <div class="md:w-1/2 md:pl-12">
+        <h2 class="text-4xl font-bold mb-4" id="slider-title">{{ item.settings.product.title }}</h2>
+        <h3 class="text-blue-600 font-semibold mb-2" id="slider-category">{{ item.settings.product.description }}</h3>
+        <a href="{{ item.settings.product.url }}">
+          <button class="border-2 border-black px-6 py-2 font-semibold hover:bg-black hover:text-white transition-colors duration-300">Shop Now</button>
+        </a>
+      </div>
+    </div>
+  {% endfor %}
+  <div class="flex mt-8">
+    <button id="prev-slide" class="border border-gray-300 p-2 mr-2 hover:bg-gray-100 transition-colors duration-300">
+      Previous
+    </button>
+    <button id="next-slide" class="border border-gray-300 p-2 hover:bg-gray-100 transition-colors duration-300">
+      Next
+    </button>
+  </div>
+</section>
+
+{% javascript %}
+  document.addEventListener("DOMContentLoaded", function() {
+    const sliderContainer = document.getElementById('product-slider');
+    const slides = sliderContainer.querySelectorAll('.flex.flex-col');
+    const prevButton = document.getElementById('prev-slide');
+    const nextButton = document.getElementById('next-slide');
+    let currentSlide = 0;
+    const slideDuration = 2000;
+
+// 5 seconds autoplay
+
+// Hide all slides except the first one
+    function showSlide(index) {
+      slides.forEach((slide, idx) => {
+        slide.classList.add('hidden');
+        if (idx === index) {
+          slide.classList.remove('hidden');
+          slide.classList.add('flex');
+        }
+      });
+    }
+
+// Show the current slide
+    showSlide(currentSlide);
+
+// Function to go to the next slide
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }
+
+// Function to go to the previous slide
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(currentSlide);
+    }
+
+// Button listeners
+    nextButton.addEventListener('click', nextSlide);
+    prevButton.addEventListener('click', prevSlide);
+
+// Autoplay functionality
+    let autoplay = setInterval(nextSlide, slideDuration);
+
+// Stop autoplay on hover and resume on mouse leave
+    sliderContainer.addEventListener('mouseenter', () => clearInterval(autoplay));
+    sliderContainer.addEventListener('mouseleave', () => {
+      autoplay = setInterval(nextSlide, slideDuration);
+    });
+  });
+
+{% endjavascript %}
+{% schema %}
+  {
+    "name": "Product Slider",
+    "tag": "section",
+    "class": "section",
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    },
+    "max_blocks": 3,
+    "settings": [
+      {
+        "content": "title",
+        "type": "header"
+
+      }
+    ],
+    "blocks": [
+      {
+        "type": "pricing_table_block",
+        "name": "Single Product Slide",
+        "settings": [
+          {
+            "type": "product",
+            "id": "product",
+            "label": "Product 2"
+          }
+        ]
+      }
+    ]
+  }
+
+{% endschema %}
