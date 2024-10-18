@@ -1,0 +1,73 @@
+<!-- ====== Error 404 Section Start -->
+<section class="relative z-10 bg-primary py-[120px]">
+  <div class="container mx-auto">
+    <div class="-mx-4 flex">
+      <div class="w-full px-4">
+        <div class="mx-auto max-w-[400px] text-center">
+          <h2 class="mb-2 text-[50px] font-bold leading-none text-black sm:text-[80px] md:text-[100px]">
+            {{ section.settings.error_code }}
+          </h2>
+          <h4 class="mb-3 text-[22px] font-semibold leading-tight text-black">
+            {{ section.settings.error_heading }}
+          </h4>
+          <p class="mb-8 text-lg text-black">
+            {{ section.settings.error_description }}
+          </p>
+          <a href="{{section.settings.go_to_home_url}}" class="inline-block rounded-lg border border-black px-8 py-3 text-center text-base font-semibold text-black transition hover:bg-black hover:text-white">
+            {{ section.settings.go_home_text }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="absolute top-0 left-0 -z-10 flex h-full w-full items-center justify-between space-x-5 md:space-x-8 lg:space-x-14">
+    <div class="h-full w-1/3 bg-gradient-to-t from-[#FFFFFF14] to-[#C4C4C400]"></div>
+    <div class="flex h-full w-1/3">
+      <div class="h-full w-1/2 bg-gradient-to-b from-[#FFFFFF14] to-[#C4C4C400]"></div>
+      <div class="h-full w-1/2 bg-gradient-to-t from-[#FFFFFF14] to-[#C4C4C400]"></div>
+    </div>
+    <div class="h-full w-1/3 bg-gradient-to-b from-[#FFFFFF14] to-[#C4C4C400]"></div>
+  </div>
+</section>
+{% schema %}
+  {
+    "name": "Not Found Section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "error_code",
+        "default": "404",
+
+        "info": "Enter the error code to display on the page.",
+        "label": "Error Code"
+      },
+      {
+        "type": "text",
+        "id": "error_heading",
+        "default": "Oops! That page can’t be found",
+        "info": "Enter the error code to display on the page.",
+        "label": "Error Code"
+      },
+      {
+        "type": "text",
+        "id": "error_description",
+        "default": "The page you are looking for it maybe deleted",
+        "info": "Enter the error code to display on the page.",
+        "label": "Error Code"
+      },
+      {
+        "type": "url",
+        "id": "go_to_home_url",
+        "info": "Enter the",
+        "label": "Home Url"
+      }, {
+        "type": "text",
+        "id": "go_home_text",
+        "info": "Enter the error code to display on the page.",
+        "label": "Home Url Text",
+        "default": "Go Home"
+      }
+
+    ]
+  }
+{% endschema %}

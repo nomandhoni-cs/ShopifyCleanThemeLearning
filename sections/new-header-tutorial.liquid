@@ -1,4 +1,5 @@
-<div class="relative bg-white" x-data="{ mobileMenuOpen: false }">
+{% assign navigationMenu = section.settings.navigation %}
+  <div class="relative bg-white" x-data="{ mobileMenuOpen: false }">
   <div class="mx-auto px-4 sm:px-6">
     <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
       <!-- STORE NAME / STORE LOGO -->
@@ -28,7 +29,7 @@
       </div>
       <!-- NAVIGATION MENU -->
       <nav class="hidden md:flex space-x-5">
-        {% for link in linklists.main-menu.links %}
+        {% for link in navigationMenu.links %}
           {% if link.links != blank %}
             <div class="relative" x-data="{ open: false }">
               <button
@@ -97,9 +98,10 @@
         <a href="{{routes.cart_url}}" class="whitespace-nowrap text-base text-gray-500 hover:text-gray-900">
           {{ 'cart-icon.svg' | inline_asset_content }}
         </a>
-
-        <a class="text-base text-gray-500 hover:text-gray-900">Login</a>
-        <a class="text-base text-gray-500 hover:text-gray-900">Register</a>
+        {% if shop.customer_accounts_enabled %}
+          <a class="text-base text-gray-500 hover:text-gray-900">Login</a>
+          <a class="text-base text-gray-500 hover:text-gray-900">Register</a>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -140,7 +142,7 @@
         </div>
 
         <!-- NAVIGATION LINKS FOR MOBILE MENU -->
-        {% for link in linklists.main-menu.links %}
+        {% for link in navigationMenu.links %}
           {% if link.links != blank %}
             <div class="relative" x-data="{ open: false }">
               <button
@@ -207,3 +209,19 @@
     </div>
   </div>
 </div>
+{% schema %}
+  {
+    "name": "Header",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Header"
+      }, {
+        "type": "link_list",
+        "id": "navigation",
+        "label": "Navigation",
+        "default": "main-menu"
+      }
+    ]
+  }
+{% endschema %}

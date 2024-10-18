@@ -1,0 +1,16 @@
+    {
+        "name": "404",
+        "sections": {
+            "main": {
+                "type": "not-found",
+                "settings": {
+                    "error_code": "500",
+                    "go_to_home_url": "/"
+
+                },
+            }
+        },
+        "order": [
+            "main"
+        ]
+    }
