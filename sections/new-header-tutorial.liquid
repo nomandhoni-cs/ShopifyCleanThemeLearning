@@ -1,11 +1,31 @@
-<div class="relative bg-white">
+<div class="relative bg-white" x-data="{ mobileMenuOpen: false }">
   <div class="mx-auto px-4 sm:px-6">
-    <div class="flex justify-center items-center py-6 md:justify-start md:space-x-10">
+    <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
       <!-- STORE NAME / STORE LOGO -->
       <div class="flex justify-start lg:flex-1 truncate">
         <h1 class="text-xl font-bold truncate">{{ shop.name }}</h1>
       </div>
+      <div class="-mr-2 -my-2 ml-3 md:hidden">
+        <button
+          type="button"
+          class="bg-white p-2 inline-flex items-center justify-center focus:outline-none"
+          x-on:click="mobileMenuOpen = ! mobileMenuOpen"
+          aria-label="Main menu">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
 
+        </button>
+      </div>
       <!-- NAVIGATION MENU -->
       <nav class="hidden md:flex space-x-5">
         {% for link in linklists.main-menu.links %}
@@ -35,6 +55,7 @@
                           <div
                             class="space-y-1"
                             x-show="dropdown_open"
+                            x-transition
                             @click.away="dropdown_open = false">
                             {% for grandChildLink in childLink.links %}
                               <!-- Grandchild link -->
@@ -79,6 +100,97 @@
 
         <a class="text-base text-gray-500 hover:text-gray-900">Login</a>
         <a class="text-base text-gray-500 hover:text-gray-900">Register</a>
+      </div>
+    </div>
+  </div>
+  <!-- MOBILE MENU -->
+  <div
+    class="absolute z-10 top-0 inset-x-0 p-2 transform origin-top-left md:hidden"
+    x-show="mobileMenuOpen"
+    @click.away="mobileMenuOpen = false"
+    x-transition>
+    <div class="shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 bg-white w-full">
+      <div class="p-5 divide-y-2 divide-gray-50">
+
+        <!-- MOBILE MENU HEADER TITLE PLUS CLOSE BUTTON -->
+        <div class="flex items-center justify-between pb-3">
+          <div>
+            <h1 class="text-lg text-gray-500">MENU</h1>
+          </div>
+          <div class="-mr-2">
+            <button
+              type="button"
+              class="bg-white rounded-md p-2 text-gray-500"
+              x-on:click="mobileMenuOpen = false">
+              CLOSE
+            </button>
+          </div>
+        </div>
+
+        <!-- NAVIGATION LINKS FOR MOBILE MENU -->
+        {% for link in linklists.main-menu.links %}
+          {% if link.links != blank %}
+            <div class="relative" x-data="{ open: false }">
+              <button
+                type="button"
+                class="inline-flex items-center text-base text-gray-500 hover:text-gray-900"
+                x-on:click="open = ! open">
+                {{ link.title }} {{ 'down-icon.svg' | inline_asset_content }}
+              </button>
+              <div
+                class="transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2"
+                x-show="open"
+                @click.away="open = false">
+                <div class=" ring-black ring-opacity-5 overflow-hidden rounded-lg">
+                  <div class=" bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                    {% for childLink in link.links %}
+                      {% if childLink.links != blank %}
+                        <div class="" x-data="{ dropdown_open: false }">
+                          <button
+                            type="button"
+                            class="inline-flex items-center text-base text-gray-500 hover:text-gray-900"
+                            x-on:click="dropdown_open = !dropdown_open">
+                            {{ childLink.title }} {{ 'down-icon.svg' | inline_asset_content }}
+                          </button>
+                          <div
+                            class="space-y-1"
+                            x-show="dropdown_open"
+                            x-transition
+                            @click.away="dropdown_open = false">
+                            {% for grandChildLink in childLink.links %}
+                              <!-- Grandchild link -->
+                              <a href="{{grandChildLink.url}}" class=" flex items-start rounded-lg bg-gray-200 hover:bg-gray-300">
+                                <div class="ml-4">
+                                  <p class="text-gray-900">
+                                    {{ grandChildLink.title }}
+                                  </p>
+                                </div>
+                              </a>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% else %}
+                        <!-- Child link (no grandchild) -->
+                        <a href="{{childLink.url}}" class=" flex items-start rounded-lg hover:bg-gray-100">
+                          <div class="ml-4">
+                            <p class="text-gray-900">
+                              {{ childLink.title }}
+                            </p>
+                          </div>
+                        </a>
+                      {% endif %}
+
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="relative">
+              <a href="{{link.url}}" class="text-base text-gray-500 hover:text-gray-900">{{ link.title }}</a>
+            </div>
+          {% endif %}
+        {% endfor %}
       </div>
     </div>
   </div>
